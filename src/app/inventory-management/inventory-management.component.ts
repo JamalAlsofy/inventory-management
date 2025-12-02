@@ -148,6 +148,10 @@ export class InventoryManagementComponent {
     });
 
     ref.onClose.subscribe(result => {
+    
+        this.subscribeToProductList();
+    this.attachFilterListeners();
+
       if (result != null) this.handleSaved();
     });
   }
