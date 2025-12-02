@@ -148,9 +148,7 @@ export class InventoryManagementComponent {
     });
 
     ref.onClose.subscribe(result => {
-    
-        this.subscribeToProductList();
-    this.attachFilterListeners();
+      this.ngOnInit();
 
       if (result != null) this.handleSaved();
     });

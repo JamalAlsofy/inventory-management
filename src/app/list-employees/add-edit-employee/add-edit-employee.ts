@@ -1,14 +1,15 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EmployeeService } from '@service/employeeservice';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ImportsModule } from 'src/app/imports';
-import { productService } from '@service/productservice';
 
 @Component({
-  selector: 'app-add-edit-product',
+  selector: 'app-add-edit-employee',
   standalone: true,
   imports: [ImportsModule],
-  providers:[productService],
+  providers:[EmployeeService],
   template: `
     <div class="p-fluid">
         <div class="field">
@@ -42,13 +43,8 @@ import { productService } from '@service/productservice';
     </div>
   `
 })
-export class AddEditProductComponent implements OnInit {
-  categories = [
-    { id: 1, name: 'Electronics' },
-    { id: 2, name: 'Furniture' },
-    { id: 3, name: 'Children Toys' },
-    { id: 4, name: 'Office Tools' }
-  ];
+export class AddEditEmployee implements OnInit {
+
 
   form!: FormGroup;
   itemId: number=0;
@@ -56,15 +52,16 @@ export class AddEditProductComponent implements OnInit {
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     private fb: FormBuilder,
-    private productSrv: productService
+    private EmployeeSrv: EmployeeService
   ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
       id: [0],
-      name: ['', Validators.required],
-      price: [null, Validators.min(1)],
-      quantity: [null, Validators.min(0)],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', Validators.min(1)],
+      quantity: ['', Validators.min(0)],
       categoryId: [null, Validators.required]
     });
     this.itemId = this.config?.data?.id;
@@ -72,51 +69,26 @@ export class AddEditProductComponent implements OnInit {
       this.form.patchValue(this.config.data.item);
     }
   }
-save() {
-  if (!this.form.valid) return;
 
-  const value = {
-    ...this.form.value,
-    price: Number(this.form.value.price),
-    quantity: Number(this.form.value.quantity),
-    categoryId: Number(this.form.value.categoryId)
-  };
+  save() {
+    if (!this.form.valid) return;
 
-  if (this.config?.data?.editMode && value.id) {
-    this.productSrv.update(value.id, value);
-  } else {
-    const toSave = {
-      name: value.name,
-      price: value.price,
-      quantity: value.quantity,
-      categoryId: value.categoryId
-    };
-    console.log(toSave);
-    
-    this.productSrv.add(toSave);
+    const value = this.form.value;
+
+    if (this.itemId>0 && this.itemId!==null) {
+      this.EmployeeSrv.update(value.id, value);
+    } else {
+      const toSave = {
+        firstName: value.firstName,
+        lastName: value.lastName,
+        price: value.price,
+        quantity: value.quantity,
+        categoryId: value.categoryId
+      };
+      console.log(toSave);
+      this.EmployeeSrv.add(toSave);
+    }
+
+    this.ref.close(true);
   }
-
-  this.ref.close(true);
-}
-
-  // save() {
-  //   if (!this.form.valid) return;
-
-  //   const value = this.form.value;
-
-  //   if (this.itemId>0 && this.itemId!==null) {
-  //     this.productSrv.update(value.id, value);
-  //   } else {
-  //     const toSave = {
-  //       name: value.name,
-  //       price: value.price,
-  //       quantity: value.quantity,
-  //       categoryId: value.categoryId
-  //     };
-  //     console.log(toSave);
-  //     this.productSrv.add(toSave);
-  //   }
-
-  //   this.ref.close(true);
-  // }
 }
