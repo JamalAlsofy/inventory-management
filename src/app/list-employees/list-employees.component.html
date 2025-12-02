@@ -1,0 +1,123 @@
+<div class="card"> <p-toast /> <p-toolbar styleClass="mb-4"> <ng-template pTemplate="left"> <button pButton
+                label="New Employee" icon="pi pi-plus" class="p-button-success mr-2" (click)="openDialog()"></button>
+        </ng-template>
+            <ng-template pTemplate="right">
+                <span class="p-input-icon-left mr-3">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" placeholder="Search employees..." [formControl]="search" />
+                </span>
+            
+                <p-dropdown [options]="departmentOptions" [formControl]="departmentFilter" placeholder="All Departments"
+                    styleClass="w-12rem"></p-dropdown>
+            </ng-template>
+            </p-toolbar>
+            
+            <p-table [value]="filtered" [paginator]="true" [rows]="pageSize" [totalRecords]="filtered.length" [(first)]="page"
+                [rowsPerPageOptions]="[5, 10, 20, 50]" [tableStyle]="{'min-width': '75rem'}" selectionMode="single">
+            
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="firstName" (click)="changeSort('firstName')">
+                            Name
+                            <p-sortIcon [field]="'firstName'" />
+                        </th>
+                        <th pSortableColumn="email" (click)="changeSort('email')">
+                            Email
+                            <p-sortIcon [field]="'email'" />
+                        </th>
+                        <th pSortableColumn="department" (click)="changeSort('department')">
+                            Department
+                            <p-sortIcon [field]="'department'" />
+                        </th>
+                        <th pSortableColumn="status" (click)="changeSort('status')">
+                            Status
+                            <p-sortIcon [field]="'status'" />
+                        </th>
+                        <th style="width: 10rem">Actions</th>
+                    </tr>
+                </ng-template>
+            
+                <ng-template pTemplate="body" let-employee>
+                    <tr>
+                        <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+                        <td>{{ employee.email }}</td>
+                        <td>
+                            <span class="p-tag" [ngClass]="{
+                                'p-tag-success': employee.department === 'Engineering',
+                                'p-tag-info': employee.department === 'Marketing',
+                                'p-tag-warning': employee.department === 'Sales',
+                                'p-tag-danger': employee.department === 'HR'
+                            }">
+                                {{ employee.department }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="p-tag" [ngClass]="employee.status === 'Active' ? 'p-tag-success' : 'p-tag-secondary'">
+                                {{ employee.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="flex gap-2">
+                                <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-primary"
+                                    (click)="openDialog(employee)"></button>
+                                <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
+                                    (click)="onDelete(employee.id)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5" class="text-center p-4">
+                            <i class="pi pi-info-circle mr-2"></i>
+                            No employees found.
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            
+            <p-dialog header="Employee Details" [(visible)]="dialogVisible" [style]="{width: '500px'}" [modal]="true"
+                [draggable]="false" [resizable]="false">
+            
+                <ng-template pTemplate="content">
+                    <form [formGroup]="employeeForm" class="p-fluid grid p-2">
+                        <div class="field col-6">
+                            <label for="firstName">First Name</label>
+                            <input pInputText id="firstName" formControlName="firstName" class="w-full" />
+                        </div>
+            
+                        <div class="field col-6">
+                            <label for="lastName">Last Name</label>
+                            <input pInputText id="lastName" formControlName="lastName" class="w-full" />
+                        </div>
+            
+                        <div class="field col-12">
+                            <label for="email">Email</label>
+                            <input pInputText id="email" formControlName="email" type="email" class="w-full" />
+                        </div>
+            
+                        <div class="field col-6">
+                            <label for="department">Department</label>
+                            <p-dropdown id="department" [options]="departmentOptions" formControlName="department"
+                                class="w-full"></p-dropdown>
+                        </div>
+            
+                        <div class="field col-6">
+                            <label for="status">Status</label>
+                            <p-dropdown id="status" [options]="statusOptions" formControlName="status" class="w-full"></p-dropdown>
+                        </div>
+            
+                        <div class="field col-12">
+                            <label for="position">Position</label>
+                            <input pInputText id="position" formControlName="position" class="w-full" />
+                        </div>
+                    </form>
+                </ng-template>
+            
+                <ng-template pTemplate="footer">
+                    <button pButton label="Cancel" icon="pi pi-times" class="p-button-text"
+                        (click)="dialogVisible = false"></button>
+                    <button pButton label="Save" icon="pi pi-check" class="p-button-primary" (click)="saveEmployee()"></button>
+                </ng-template>
+            </p-dialog></div>

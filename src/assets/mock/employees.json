@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1002444491",
+    "firstName": "Jamal",
+    "lastName": "Al-Sofy",
+    "email": "jamal.alsoofy@gmail.com",
+    "department": "Angular",
+    "status": "active",
+    "createdAt": "2025-01-05T09:12:00Z"
+  },
+  {
+    "id": "1000773640",
+    "firstName": "Yousef",
+    "lastName": "Kalil",
+    "email": "Y.Kaliil@gmail.com",
+    "department": "IT",
+    "status": "on_leave",
+    "createdAt": "2025-02-12T10:00:00Z"
+  }
+]
